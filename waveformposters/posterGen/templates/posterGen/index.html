@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		{% load static %}
+			<link href="{% static "css/materialize.css" %}" rel="stylesheet">
+			<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+			<!--Import Google Icon Font-->
+			<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+			<!--Tell browser site is optimized for mobile-->
+			<meta name="vieport" content="width=device-width, initial-scale=1.0"/>
+			<title>Waveform Poster Generator</title>
+	</head>
+	<header>
+		<!--Nav Bar-->
+		<nav class="nav-wrapper amber darken-4">
+				<div class="nav-wrapper">
+					<a href="http://127.0.0.1:8000/posterGen" class="brand-logo center">Waveform Wallpaper Generator</a>
+					<ul id="nav-mobile" class="right hide-on-med-and-down">
+					</ul>
+				</div>
+			</nav>
+	</header>
+	<body style="display: flex; min-height: 100vh; flex-direction: column;">
+		<div class="container" style="flex: 1 0 auto; padding-top: 20px;">
+			<h5 class="center-align">Generate waveform wallpapers of your favourite songs!</h5>
+			{% block content %}
+			<br>
+			<br>
+			{% csrf_token %}
+			<form>
+				<div class="input-field container" style="text-align: center;">
+					<i class="material-icons prefix">music_note</i>
+					<input type="text" id="user_query" class="validate" name="user_query" placeholder="Bags by Clairo">
+					<label for="user_query">Search for a song</label>
+					<br>
+					<p class="center-align">Note: Typing out the full name of the song and artist can help in getting more accurate results.</p>
+					<button class="btn waves-effect waves-light amber darken-4" type="submit" name="action" id="submit_button" onclick="showProg()">Generate</button>
+				</div>
+			</form>
+			<div class="container" style="padding-top: 10px; text-align: center;">
+				<h6 id="prog_indicator" class="center-align" style="padding-bottom: 10px; display: none;">Processing</h6>
+				<div id="prog_bar" class="progress deep-orange" style="width: 300px; margin: 0 auto; display: none;">
+					<div class="indeterminate deep-orange lighten-3"></div>
+				</div>
+			</div>
+			<script>
+				function showProg() {
+					document.getElementById("prog_indicator").style.display = "block";
+					document.getElementById("prog_bar").style.display = "block";
+				}
+			</script>
+		</div>
+		<div class="container" style="text-align: center; padding-bottom: 30px; padding-top: 20px;">
+			<img id="waveform" class="responsive-img z-depth-5" src="{{waveform_meta.0}}">
+		</div>
+		{% if not waveform_meta.0 == "" %}
+		<div class="container" style="text-align: center; padding-bottom: 35px;">
+			<h6 id="customize_heading" class="center-align" style="padding-bottom: 20px;">Did we get something wrong? Don't like the colours we picked? You can customize your poster by clicking the button below!</h6>
+			<button class="btn waves-effect waves-light amber darken-4" id="customize_btn" onclick="customizeForm()">Customize</button>
+			<div id="customize_form" class="row" style="display: none; padding-top: 20px;">
+				<form class="col s12">
+					<div class="input-field col s6">
+						<input id="song_title" name="song_title" type="text" class="validate" value="{{waveform_meta.3}}">
+						<label for="song_title">Song Title</label>
+					</div>
+					<div class="input-field col s6">
+						<input id="artist_name" name="artist_name" type="text" class="validate" value="{{waveform_meta.4}}">
+						<label for="artist_name">Artist</label>
+					</div>
+					<div class="input-field col s12">
+						<input id="song_link" name="song_link" type="text" class="validate" value="{{waveform_meta.0}}">
+						<label for="song_link">Song YouTube Link</label>
+					</div>
+					<div class="input-field col s6">
+						<input id="primary_colour" name="primary_colour" type="text" class="validate" value="{{waveform_meta.1}}">
+						<label for="primary_colour">Primary Colour</label>
+					</div>
+					<div class="input-field col s6">
+						<input id="secondary_colour" name="secondary_colour" type="text" class="validate" value="{{waveform_meta.2}}">
+						<label for="secondary_colour">Secondary Colour</label>
+					</div>
+					<button class="btn waves-effect waves-light amber darken-4" type="submit" name="customize_action" id="customize_submit_btn" onclick="showCustomizeProg()">Generate</button>
+				</form>
+			</div>
+			<div class="container" style="padding-top: 10px; text-align: center;">
+				<h6 id="customize_prog_indicator" class="center-align" style="padding-bottom: 10px; display: none;">Processing</h6>
+				<div id="customize_prog_bar" class="progress deep-orange" style="width: 300px; margin: 0 auto; display: none;">
+					<div class="indeterminate deep-orange lighten-3"></div>
+				</div>
+			</div>
+		</div>
+			<script>
+				document.getElementById('waveform').scrollIntoView();
+			</script>
+		{% endif %}
+		<script>
+			function customizeForm() {
+				document.getElementById("customize_form").style.display = "block";
+				document.getElementById("customize_heading").style.display = "none";
+				document.getElementById("customize_btn").style.display = "none";
+				document.getElementById("customize_submit_btn").scrollIntoView();
+			}
+
+			function showCustomizeProg() {
+				document.getElementById("customize_prog_indicator").style.display = "block";
+				document.getElementById("customize_prog_bar").style.display = "block";
+			}
+		</script>
+		{% endblock %}
+	</body>
+	<footer class="page-footer amber darken-4">
+		<p class="white-text" style="padding-left: 5px;">A project by Imaan Gill © 2021</h5>
+	</footer>
+	<!--JS at end for optimized loading-->
+	<script type="text/javascript" src="{% static "js/bin/materialize.min.js" %}"></script>
+</html>
